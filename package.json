@@ -1,0 +1,24 @@
+{
+  "name": "dependency-tree",
+  "version": "0.0.1",
+  "description": "Dependency tree",
+  "engines": {
+    "node": ">= 6.4.0",
+    "npm": ">=3"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "deptree": "./bin"
+  },
+  "author": "Miguel Silva",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
