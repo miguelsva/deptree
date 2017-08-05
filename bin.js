@@ -32,21 +32,35 @@ function flattenDependencies(dependencies) {
   , []);
 }
 
-function getDependenciesLinks(allDependencies) {
-  return allDependencies.map((pkg) => {
-    if (pkg.dependencies) {
-      return pkg.dependencies.map(dependency => ({
+function getDependenciesLinks(pkg) {
+  if (pkg.dependencies) {
+    let links = [];
+    for (const dependency of pkg.dependencies) { // eslint-disable-line
+      links.push({
         source: pkg.name,
         target: dependency.name,
-      }));
+      });
+      if (dependency.dependencies) {
+        const dependencyDeps = getDependenciesLinks(dependency);
+        if (dependencyDeps) {
+          links = [...links, ...dependencyDeps];
+        }
+      }
     }
-    return null;
-  }).reduce((a, b) => a.concat(b || []));
+    return links;
+  }
+  return null;
+}
+
+function getAllDependenciesLinks(allDependencies) {
+  return allDependencies.map(pkg => getDependenciesLinks(pkg))
+    .reduce((a, b) => a.concat(b || []));
 }
 
 function createGraphData(dependencies) {
   const nodes = flattenDependencies(dependencies).map(d => ({ id: d.name }));
-  const links = getDependenciesLinks(dependencies);
+  // TODO: Filter out duplicates
+  const links = getAllDependenciesLinks(dependencies);
   return {
     nodes,
     links,
@@ -59,7 +73,7 @@ function init() {
     console.error('No packages found. Did you run npm i?');
   }
   const dependencies = getDependencies(packages);
-  console.log(JSON.stringify(createGraphData(dependencies).links));
+  console.log(JSON.stringify(createGraphData(dependencies)));
 }
 
 init();
