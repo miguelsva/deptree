@@ -6,6 +6,10 @@
     "node": ">= 6.4.0",
     "npm": ">=3"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miguelsva/deptree.git"
+  },
   "scripts": {
     "lint": "./node_modules/.bin/eslint index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +20,9 @@
   },
   "author": "Miguel Silva",
   "license": "MIT",
+  "dependencies": {
+    "d3plus": "^1.9.8"
+  },
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",

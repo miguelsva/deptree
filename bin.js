@@ -32,14 +32,25 @@ function flattenDependencies(dependencies) {
   , []);
 }
 
-function getDependenciesLinks(dependencies) {
-  
+function getDependenciesLinks(allDependencies) {
+  return allDependencies.map((pkg) => {
+    if (pkg.dependencies) {
+      return pkg.dependencies.map(dependency => ({
+        source: pkg.name,
+        target: dependency.name,
+      }));
+    }
+    return null;
+  }).reduce((a, b) => a.concat(b || []));
 }
 
 function createGraphData(dependencies) {
   const nodes = flattenDependencies(dependencies).map(d => ({ id: d.name }));
-  // const links = getDependenciesLinks(dependencies);
-  return { nodes };
+  const links = getDependenciesLinks(dependencies);
+  return {
+    nodes,
+    links,
+  };
 }
 
 function init() {
@@ -48,7 +59,7 @@ function init() {
     console.error('No packages found. Did you run npm i?');
   }
   const dependencies = getDependencies(packages);
-  console.log(JSON.stringify(createGraphData(dependencies)));
+  console.log(JSON.stringify(createGraphData(dependencies).links));
 }
 
 init();
