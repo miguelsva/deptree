@@ -26,10 +26,15 @@ function getDependencies(packages) {
   });
 }
 
+function removeDuplicates(list) {
+  return list.filter((elm, index) => list.indexOf(elm) === index);
+}
+
 function flattenDependencies(dependencies) {
-  return dependencies.reduce((a, b) => a.concat(
-    (b.dependencies ? [b].concat(flattenDependencies(b.dependencies)) : b))
+  const flattened = dependencies.reduce((a, b) => a.concat(
+    (b.dependencies ? [b.name].concat(flattenDependencies(b.dependencies)) : b.name))
   , []);
+  return removeDuplicates(flattened);
 }
 
 function getDependenciesLinks(pkg) {
@@ -58,8 +63,7 @@ function getAllDependenciesLinks(allDependencies) {
 }
 
 function createGraphData(dependencies) {
-  const nodes = flattenDependencies(dependencies).map(d => ({ id: d.name }));
-  // TODO: Filter out duplicates
+  const nodes = flattenDependencies(dependencies).sort().map(d => ({ id: d }));
   const links = getAllDependenciesLinks(dependencies);
   return {
     nodes,
