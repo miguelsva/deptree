@@ -21,7 +21,7 @@
   "author": "Miguel Silva",
   "license": "MIT",
   "dependencies": {
-    "d3plus": "^1.9.8"
+    "dot": "^1.1.2"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

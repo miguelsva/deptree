@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis-network.min.css" rel="stylesheet" />
+    <style type="text/css">
+      html,
+      body,
+      #graph {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js"></script>
+  </head>
+  <body>
+    <div id="graph" />
+    <script>
+      var data = {{=JSON.stringify(it.data)}};
+      var nodes = new vis.DataSet(data.nodes);
+      var edges = new vis.DataSet(data.links);
+      var container = document.getElementById('graph');
+      var all = {
+        nodes: nodes,
+        edges: edges
+      };
+      new vis.Network(container, all, { nodes: { shape: 'dot', size: 10, color: { background: '#FFFFFF' } }, layout: { randomSeed: 1 } });
+    </script>
+  </body>
+</html>

@@ -2,6 +2,7 @@
 
 // TODO: Use async
 const { execSync } = require('child_process');
+const doT = require('dot');
 
 // TODO: Move this to deptree.js
 function getPackages() {
@@ -42,8 +43,8 @@ function getDependenciesLinks(pkg) {
     let links = [];
     for (const dependency of pkg.dependencies) { // eslint-disable-line
       links.push({
-        source: pkg.name,
-        target: dependency.name,
+        from: pkg.name,
+        to: dependency.name,
       });
       if (dependency.dependencies) {
         const dependencyDeps = getDependenciesLinks(dependency);
@@ -59,11 +60,11 @@ function getDependenciesLinks(pkg) {
 
 function getAllDependenciesLinks(allDependencies) {
   return allDependencies.map(pkg => getDependenciesLinks(pkg))
-    .reduce((a, b) => a.concat(b || []));
+    .reduce((a, b) => a.concat(b || []), []);
 }
 
 function createGraphData(dependencies) {
-  const nodes = flattenDependencies(dependencies).sort().map(d => ({ id: d }));
+  const nodes = flattenDependencies(dependencies).sort().map(d => ({ id: d, label: d }));
   const links = getAllDependenciesLinks(dependencies);
   return {
     nodes,
@@ -71,13 +72,21 @@ function createGraphData(dependencies) {
   };
 }
 
+function generateHTML(data) {
+  const dots = doT.process({ path: './views' });
+  return dots.graph({ data });
+}
+
 function init() {
   const packages = getPackages();
   if (!packages) {
     console.error('No packages found. Did you run npm i?');
+    return;
   }
   const dependencies = getDependencies(packages);
-  console.log(JSON.stringify(createGraphData(dependencies)));
+  const graphData = createGraphData(dependencies);
+  const html = generateHTML(graphData);
+  process.stdout.write(html);
 }
 
 init();
