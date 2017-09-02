@@ -4,6 +4,11 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const doT = require('dot');
+const program = require('commander');
+
+program
+  .option('-f, --filter <f>', 'filter packages according to regex')
+  .parse(process.argv);
 
 // TODO: Move this to deptree.js
 function getPackages() {
@@ -84,7 +89,11 @@ function init() {
     console.error('No packages found. Did you run npm i?');
     process.exit(1);
   }
-  const dependencies = getDependencies(packages).filter(p => /^/.test(p.name));
+  let dependencies = getDependencies(packages);
+  if (program.filter) {
+    const filter = new RegExp(program.filter);
+    dependencies = dependencies.filter(p => filter.test(p.name));
+  }
   const graphData = createGraphData(dependencies);
   const html = generateHTML(graphData);
   fs.writeFile('report.html', html, (e) => {

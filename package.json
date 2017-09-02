@@ -16,11 +16,12 @@
   },
   "preferGlobal": true,
   "bin": {
-    "deptree": "./bin"
+    "deptree": "./bin/deptree.js"
   },
   "author": "Miguel Silva",
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.11.0",
     "dot": "^1.1.2"
   },
   "devDependencies": {
