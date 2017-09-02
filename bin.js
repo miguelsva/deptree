@@ -2,6 +2,7 @@
 
 // TODO: Use async
 const { execSync } = require('child_process');
+const fs = require('fs');
 const doT = require('dot');
 
 // TODO: Move this to deptree.js
@@ -86,7 +87,13 @@ function init() {
   const dependencies = getDependencies(packages);
   const graphData = createGraphData(dependencies);
   const html = generateHTML(graphData);
-  process.stdout.write(html);
+  fs.writeFile('report.html', html, (e) => {
+    if (e) {
+      console.log('An error occurred when writing the html file', e);
+    } else {
+      console.log('Dependency tree report file generated: report.html');
+    }
+  });
 }
 
 init();
