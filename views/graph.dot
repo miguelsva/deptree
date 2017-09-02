@@ -23,7 +23,26 @@
         nodes: nodes,
         edges: edges
       };
-      new vis.Network(container, all, { nodes: { shape: 'dot', size: 10, color: { background: '#FFFFFF' } }, layout: { randomSeed: 1 } });
+      var options = {
+        nodes: {
+          shape: 'dot',
+          size: 8,
+          color: {
+            background: '#FFFFFF'
+          }
+        },
+        edges: {
+          arrows: {
+            to: {
+              enabled: true,
+            },
+          }
+        },
+        layout: {
+          randomSeed: 1
+        }
+      };
+      new vis.Network(container, all, options);
     </script>
   </body>
 </html>

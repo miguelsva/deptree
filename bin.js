@@ -82,17 +82,17 @@ function init() {
   const packages = getPackages();
   if (!packages) {
     console.error('No packages found. Did you run npm i?');
-    return;
+    process.exit(1);
   }
-  const dependencies = getDependencies(packages);
+  const dependencies = getDependencies(packages).filter(p => /^/.test(p.name));
   const graphData = createGraphData(dependencies);
   const html = generateHTML(graphData);
   fs.writeFile('report.html', html, (e) => {
     if (e) {
-      console.log('An error occurred when writing the html file', e);
-    } else {
-      console.log('Dependency tree report file generated: report.html');
+      console.error('An error occurred when writing the html file', e);
+      process.exit(1);
     }
+    console.log('Dependency tree report file generated: report.html');
   });
 }
 
